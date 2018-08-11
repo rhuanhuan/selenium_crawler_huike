@@ -4,7 +4,6 @@
 __pycache__/
 chromedriver
 geckodriver.log
-huike_client.py
 news.py
 parse_data.py
 result.json
