@@ -154,10 +154,10 @@ def remove_all_of_current_page():
 
 def go_to_next_page():
     print('go_to_next_page')
-    CONFIG['current_index'] += 1
-
-    print('current page index is' + str(CONFIG['current_index']))
     BROWSER.find_element_by_css_selector('.pagination .fa-angle-right').click()
+
+    CONFIG['current_index'] += 1
+    print('current page index is' + str(CONFIG['current_index']))
 
 
 def click_view_with_page():
