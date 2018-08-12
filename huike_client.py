@@ -169,7 +169,7 @@ def go_to_detail_page():
         logging.error('Exception', exc_info=True)
 
 
-def export_news_info():
+def export_news_info_and_go_back_to_init_page():
     print('export_news_info')
     locator = (By.CLASS_NAME, "app-article")
     WebDriverWait(BROWSER, 90, 0.5).until(expected_conditions.presence_of_element_located(locator))
@@ -185,6 +185,9 @@ def export_news_info():
         news_result = News(title=title, source=source, words_number=word_number, news_time=record_time, description=description)
         with open("result.json", "a+", encoding='utf8') as f:
             f.write(news_result.to_str() + ',\n')
+    print('all info exported, close current windows')
+    BROWSER.close()
+    switch_to_init_windows()
 
 
 open_start_page()
@@ -201,14 +204,13 @@ first_choose_all_of_current_page()
 click_view_with_page()
 go_to_detail_page()
 switch_to_new_windows()
-export_news_info()
+export_news_info_and_go_back_to_init_page()
 
 while True:
-    switch_to_init_windows()
     remove_all_of_current_page()
     go_to_next_page()
 
     choose_all_of_current_page()
     go_to_detail_page()
     switch_to_new_windows()
-    export_news_info()
+    export_news_info_and_go_back_to_init_page()
