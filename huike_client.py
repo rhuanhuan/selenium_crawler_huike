@@ -15,6 +15,11 @@ from news import News
 
 firefox_driver = '/Users/rhuan/project/graduateTraining/python-example/CrawlerChineseLib/geckodriver'
 BROWSER = webdriver.Firefox()
+CONFIG = {
+    "start_index": 0,
+    "current_index": 0
+}
+
 
 
 def open_start_page():
@@ -115,8 +120,13 @@ def first_choose_all_of_current_page():
         locator = (By.ID, "navbar-nav-opt-article-checkbox-div")
         WebDriverWait(BROWSER, 90, 0.5).until(expected_conditions.presence_of_element_located(locator))
         time.sleep(10)
+        while CONFIG['start_index'] > CONFIG['current_index']:
+            go_to_next_page()
+            time.sleep(0.5)
+
         BROWSER.find_element_by_css_selector('#navbar-nav-opt-article-checkbox-div i').click()
         time.sleep(3)
+
     except Exception:
         logging.error('Exception', exc_info=True)
 
@@ -143,11 +153,11 @@ def remove_all_of_current_page():
 
 
 def go_to_next_page():
-    try:
-        print('go_to_next_page')
-        BROWSER.find_element_by_css_selector('.pagination .fa-angle-right').click()
-    except Exception:
-        logging.error('Exception', exc_info=True)
+    print('go_to_next_page')
+    CONFIG['current_index'] += 1
+
+    print('current page index is' + str(CONFIG['current_index']))
+    BROWSER.find_element_by_css_selector('.pagination .fa-angle-right').click()
 
 
 def click_view_with_page():
