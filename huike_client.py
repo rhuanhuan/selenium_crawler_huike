@@ -115,7 +115,7 @@ def first_choose_all_of_current_page():
         locator = (By.ID, "navbar-nav-opt-article-checkbox-div")
         WebDriverWait(BROWSER, 90, 0.5).until(expected_conditions.presence_of_element_located(locator))
         time.sleep(10)
-        BROWSER.find_element_by_css_selector('#navbar-nav-opt-article-checkbox-div .fa-square-o').click()
+        BROWSER.find_element_by_css_selector('#navbar-nav-opt-article-checkbox-div i').click()
         time.sleep(3)
     except Exception:
         logging.error('Exception', exc_info=True)
@@ -126,8 +126,10 @@ def choose_all_of_current_page():
         print('choose_all_of_current_page')
         locator = (By.ID, "navbar-nav-opt-article-checkbox-div")
         WebDriverWait(BROWSER, 90, 0.5).until(expected_conditions.presence_of_element_located(locator))
-        BROWSER.find_element_by_css_selector('#navbar-nav-opt-article-checkbox-div .fa-square-o').click()
-        time.sleep(3)
+        time.sleep(1)
+        BROWSER.find_element_by_css_selector('#navbar-nav-opt-article-checkbox-div i').click()
+        time.sleep(1)
+
     except Exception:
         logging.error('Exception', exc_info=True)
 
@@ -158,7 +160,10 @@ def click_view_with_page():
 
 def go_to_detail_page():
     try:
-        print('view_page')
+        print('go_to_detail_page')
+        locator = (By.CLASS_NAME, "btn-primary")
+        WebDriverWait(BROWSER, 90, 0.5).until(expected_conditions.presence_of_element_located(locator))
+
         BROWSER.find_element_by_css_selector('.navbar-right .dropdown-eye .btn-primary').click()
     except Exception:
         logging.error('Exception', exc_info=True)
@@ -202,6 +207,7 @@ while True:
     switch_to_init_windows()
     remove_all_of_current_page()
     go_to_next_page()
+
     choose_all_of_current_page()
     go_to_detail_page()
     switch_to_new_windows()
