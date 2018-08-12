@@ -7,3 +7,4 @@ geckodriver.log
 parse_data.py
 result.json
 secret.py
+test_py.py
