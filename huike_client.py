@@ -1,4 +1,3 @@
-import json
 import logging
 import time
 
@@ -13,10 +12,10 @@ from secret import wu_da_library_entrance
 from news import News
 
 
-firefox_driver = '/Users/rhuan/project/graduateTraining/python-example/CrawlerChineseLib/geckodriver'
-BROWSER = webdriver.Firefox()
+firefox_driver = '/Users/tianxianhu/Downloads/geckodriver'
+BROWSER = webdriver.Firefox(executable_path=firefox_driver)
 CONFIG = {
-    "start_index": 0,
+    "start_index": 107,
     "current_index": 0
 }
 
@@ -193,7 +192,7 @@ def export_news_info_and_go_back_to_init_page():
         record_time = other_information[2].text
         description = new.find_element_by_css_selector('.col-xs-12 .description').text.replace("\n", "")
         news_result = News(title=title, source=source, words_number=word_number, news_time=record_time, description=description)
-        with open("result.json", "a+", encoding='utf8') as f:
+        with open("result20030101-20061231.json", "a+", encoding='utf8') as f:
             f.write(news_result.to_str() + ',\n')
     print('all info exported, close current windows')
     BROWSER.close()

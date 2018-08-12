@@ -5,6 +5,6 @@ __pycache__/
 chromedriver
 geckodriver.log
 parse_data.py
-result.json
+result*.json
 secret.py
 test_py.py
