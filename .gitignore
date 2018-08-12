@@ -4,7 +4,6 @@
 __pycache__/
 chromedriver
 geckodriver.log
-news.py
 parse_data.py
 result.json
 secret.py
