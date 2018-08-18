@@ -220,11 +220,11 @@ def export_news_info():
     print('\n+++++\n')
     last_record_time = None
     for new in news:
-        title = new.find_element_by_css_selector('.list-group-item-heading span').text
+        title = new.find_element_by_css_selector('.list-group-item-heading span').text.replace("\"", "'")
         news_office = new.find_element_by_css_selector('small a').text
         word_number = str(new.find_element_by_css_selector('small span').text).split()[-1][:-1]
         record_time = new.find_element_by_css_selector('.article-main .pull-right').text
-        description = new.find_element_by_css_selector('.media-body .list-group-item-text').text.replace("\n", "")
+        description = new.find_element_by_css_selector('.media-body .list-group-item-text').text.replace("\n", "").replace("\"", "'")
         news_result = News(title=title, news_office=news_office, words_number=word_number, news_time=record_time, description=description)
         with open("result20030101-20061231.json", "a+", encoding='utf8') as f:
             f.write(news_result.to_str() + ',\n')
