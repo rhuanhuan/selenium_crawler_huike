@@ -245,10 +245,11 @@ do_search()
 wait_search_result_loaded()
 
 print('wait page fully loaded')
-time.sleep(10)
+time.sleep(5)
 export_news_info()
 
 while True:
     go_to_next_page()
-
+    print('wait page fully loaded')
+    time.sleep(5)
     export_news_info()
