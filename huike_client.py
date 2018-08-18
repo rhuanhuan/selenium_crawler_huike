@@ -2,6 +2,7 @@ import logging
 import time
 
 from selenium import webdriver
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions
@@ -15,10 +16,9 @@ from news import News
 firefox_driver = '/Users/tianxianhu/Downloads/geckodriver'
 BROWSER = webdriver.Firefox(executable_path=firefox_driver)
 CONFIG = {
-    "start_index": 107,
+    "start_index": 0,
     "current_index": 0
 }
-
 
 
 def open_start_page():
@@ -113,18 +113,34 @@ def do_search():
 ###################################################
 
 
-def first_choose_all_of_current_page():
+def wait_search_result_loaded():
+    locator = (By.ID, "navbar-nav-opt-article-checkbox-div")
     try:
         print('choose_all_of_current_page')
-        locator = (By.ID, "navbar-nav-opt-article-checkbox-div")
         WebDriverWait(BROWSER, 90, 0.5).until(expected_conditions.presence_of_element_located(locator))
+        time.sleep(10)
+        display_200_elements_on_one_page()
         time.sleep(10)
         while CONFIG['start_index'] > CONFIG['current_index']:
             go_to_next_page()
-            time.sleep(0.5)
+            time.sleep(5)
+    except Exception:
+        logging.error('Exception', exc_info=True)
+    WebDriverWait(BROWSER, 90, 0.5).until(expected_conditions.presence_of_element_located(locator))
+    print('choose all news')
+    BROWSER.find_element_by_css_selector('#navbar-nav-opt-article-checkbox-div i').click()
+    BROWSER.save_screenshot('find-element.png')
+    time.sleep(3)
 
-        BROWSER.find_element_by_css_selector('#navbar-nav-opt-article-checkbox-div i').click()
-        time.sleep(3)
+
+def display_200_elements_on_one_page():
+    try:
+        print('display_200_elements_on_one_page')
+        BROWSER.find_element_by_css_selector('.navbar-nav-tools-settings .dropdown-toggle').click()
+        time.sleep(0.5)
+        BROWSER.find_elements_by_css_selector('.select-page-count .circles li')[4].click()
+        # BROWSER.find_element_by_css_selector('.navbar-nav-tools-settings .dropdown-toggle').click()
+        ActionChains(BROWSER).move_by_offset(1, 1).click()
 
     except Exception:
         logging.error('Exception', exc_info=True)
@@ -153,10 +169,14 @@ def remove_all_of_current_page():
 
 def go_to_next_page():
     print('go_to_next_page')
+    locator = (By.CLASS_NAME, 'fa-angle-right')
+    WebDriverWait(BROWSER, 90, 0.5).until(expected_conditions.presence_of_element_located(locator))
+    time.sleep(1)
+
     BROWSER.find_element_by_css_selector('.pagination .fa-angle-right').click()
 
     CONFIG['current_index'] += 1
-    print('current page index is' + str(CONFIG['current_index']))
+    print('current page index is ' + str(CONFIG['current_index']))
 
 
 def click_view_with_page():
@@ -184,6 +204,7 @@ def export_news_info_and_go_back_to_init_page():
     WebDriverWait(BROWSER, 90, 0.5).until(expected_conditions.presence_of_element_located(locator))
 
     news = BROWSER.find_elements_by_class_name('app-article')
+    last_record_time = None
     for new in news:
         title = new.find_element_by_css_selector('.col-xs-12 h3').text
         other_information = new.find_elements_by_css_selector('.col-xs-12 .article-subheading span')
@@ -194,6 +215,9 @@ def export_news_info_and_go_back_to_init_page():
         news_result = News(title=title, source=source, words_number=word_number, news_time=record_time, description=description)
         with open("result20030101-20061231.json", "a+", encoding='utf8') as f:
             f.write(news_result.to_str() + ',\n')
+        last_record_time = record_time
+
+    print(last_record_time)
     print('all info exported, close current windows')
     BROWSER.close()
     switch_to_init_windows()
@@ -205,11 +229,11 @@ open_huike()
 show_current_page_info()
 # switch_to_new_windows()
 # input_search_texts(u"“烟草” / “控烟” / “禁烟”+“烟”+“烟”+“烟”-“烟花”-“烟火”")
-input_search_date('2003-01-01', '2006-12-31')
+input_search_date('2003-01-01', '2006-8-15')
 remove_synonymicon()
 do_search()
 
-first_choose_all_of_current_page()
+wait_search_result_loaded()
 click_view_with_page()
 go_to_detail_page()
 switch_to_new_windows()
