@@ -183,8 +183,13 @@ def go_to_next_page():
     locator = (By.CLASS_NAME, 'fa-angle-right')
     WebDriverWait(BROWSER, 90, 0.5).until(expected_conditions.presence_of_element_located(locator))
     time.sleep(1)
-
-    BROWSER.find_element_by_css_selector('.pagination .fa-angle-right').click()
+    for n in range(0, 10):
+        try:
+            BROWSER.find_element_by_css_selector('.pagination .fa-angle-right').click()
+            break
+        except Exception:
+            print('do not find next page, wait for:' + str(n))
+            time.sleep(n)
 
     CONFIG['current_index'] += 1
     print('current page index is ' + str(CONFIG['current_index']))
@@ -214,10 +219,14 @@ def export_news_info():
     locator = (By.CLASS_NAME, "list-group")
     WebDriverWait(BROWSER, 90, 0.5).until(expected_conditions.presence_of_element_located(locator))
 
-    news = BROWSER.find_elements_by_css_selector('#article-tab-1-view-1 .list-group .list-group-item')
-    print('\n+++++\n')
-    print(len(news))
-    print('\n+++++\n')
+    news, n = [], 0
+    while n == 0:
+        news = BROWSER.find_elements_by_css_selector('#article-tab-1-view-1 .list-group .list-group-item')
+        print('\n+++++\n')
+        n = len(news)
+        time.sleep(2)
+        print('\n+++++\n')
+
     last_record_time = None
     for new in news:
         title = new.find_element_by_css_selector('.list-group-item-heading span').text.replace("\"", "'")
